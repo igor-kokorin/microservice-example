@@ -41,7 +41,7 @@ services:
             - 6565:6565
 
     address-service:
-        image: auth-service:1.0
+        image: address-service:1.0
         build:
             context: './address-service'
         links:

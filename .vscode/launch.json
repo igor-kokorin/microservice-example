@@ -18,7 +18,7 @@
 			"port": 9229
 		},
 		{
-			"name": "Attach to Docker - Auth Service",
+			"name": "Attach to Docker - Address Service",
 			"type": "node",
 			"protocol": "inspector",
 			"request": "attach",
@@ -29,7 +29,7 @@
 				"node_modules"
 			],
 			"port": 9229,
-			"localRoot": "${workspaceRoot}/auth-service/",
+			"localRoot": "${workspaceRoot}/address-service/",
 			"remoteRoot": "/home/app/node"
 		},
 	]
