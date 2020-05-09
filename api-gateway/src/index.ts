@@ -19,7 +19,16 @@ async function init() {
 	const server: Hapi.Server = new Hapi.Server({
 		port: hapiPort,
 		host: hapiHost,
-		debug: { request: ['error'] }
+		debug: { request: ['error'] },
+		routes: {
+			validate: {
+				failAction: async (request: any, h: Hapi.ResponseToolkit, err: any) => {
+					if (err.isBoom) {
+						throw err
+					}
+				}
+			}
+		}
 	});
 
 	// Configure the logger
@@ -90,6 +99,20 @@ async function init() {
 			}
 		}
 	});
+
+	server.ext('onPreResponse', (request: any, h: Hapi.ResponseToolkit) => {
+		const response = request.response
+		if (!response.isBoom) {
+			return h.continue
+		}
+
+		const is4xx = response.output.statusCode >= 400 && response.output.statusCode < 500
+		if (is4xx && response.data) {
+			response.output.payload.data = response.data
+		}
+
+		return h.continue
+	})
 
 	await server.start();
 	return server;
