@@ -56,6 +56,6 @@ services:
             - NATS_URL=nats://nats:4222
             - NATS_USER=ruser
             - NATS_PW=T0pS3cr3t
-            - DADATA_TOKEN=
+            - DADATA_TOKEN=${DADATA_TOKEN}
         networks:
             - back-tier
