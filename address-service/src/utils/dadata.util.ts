@@ -34,24 +34,32 @@ export default class DadataUtil implements IDadataUtil {
 					'Accept': 'application/json',
 					'Authorization': `Token ${this.dadataToken}`
 				}
-			}, (res) => {
+			}, res => {
 				if (res.statusCode !== 200) {
 					reject(new Error(`Cannot get response from dadata.ru API - status code ${res.statusCode}`));
 					return;
 				}
 
+				const result: Buffer[] = [];
+
 				res.on('data', data => {
-					if (!data) {
+					result.push(data);
+				});
+
+				res.on('end', () => {
+					if (!result.length) {
 						reject(new Error('No data was returned from dadata.ru API'));
 						return;
 					}
 
-					let result = data.toString();
+					const responseBody = Buffer.concat(result).toString();
 
-					result = JSON.parse(result);
-
-					resolve(result);
-				});
+					try {
+						resolve(JSON.parse(responseBody));
+					} catch (error) {
+						reject(error);
+					}
+				})
 			});
 
 			request.on('error', error => {
